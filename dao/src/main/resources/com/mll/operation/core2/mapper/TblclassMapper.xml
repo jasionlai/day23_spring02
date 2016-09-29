@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mll.operation.core2.mapper.TblclassMapper">
+
+    <sql id="tblclassBaseColumnSql">
+        cid,
+        cname,
+        cteacherID
+    </sql>
+
+    <sql id="tblclassBaseWhereSql">
+        <if test="map!=null">
+            <where>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.cid)">
+                    cid = #{map.cid}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.cname)">
+                    AND cname = #{map.cname}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.cteacherId)">
+                    AND cteacherID = #{map.cteacherId}
+                </if>
+            </where>
+        </if>
+    </sql>
+
+    <insert id="insertTblclass" parameterType="com.mll.operation.core2.entity.Tblclass">
+        INSERT INTO tblclass(
+        <include refid="tblclassBaseColumnSql"/>
+        )VALUES(
+            #{cid},
+            #{cname},
+            #{cteacherId}
+        )
+    </insert>
+
+    
+    <delete id="deleteTblclassByCid" parameterType="Integer">
+        DELETE FROM tblclass WHERE cid = #{cid}
+    </delete>
+
+    <update id="updateTblclass" parameterType="com.mll.operation.core2.entity.Tblclass">
+        UPDATE tblclass
+        <set>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(cname)">
+                cname = #{cname} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(cteacherId)">
+                cteacherID = #{cteacherId} ,
+            </if>
+        </set>
+        WHERE cid = #{cid}
+    </update>
+
+    <select id="searchTblclassByParams" parameterType="map" resultMap="tblclassMap">
+        SELECT
+        <include refid="tblclassBaseColumnSql"/>
+        FROM tblclass
+        <include refid="tblclassBaseWhereSql"/>
+    </select>
+
+    <resultMap type="com.mll.operation.core2.entity.Tblclass" id="tblclassMap">
+        <id column="cid" property="cid"/>
+        <result column="cname" property="cname"/>
+        <result column="cteacherID" property="cteacherId"/>
+    </resultMap>
+
+</mapper>

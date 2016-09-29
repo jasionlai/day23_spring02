@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mll.operation.core2.mapper.TblstudentMapper">
+
+    <sql id="tblstudentBaseColumnSql">
+        StuId,
+        StuName,
+        StuAge,
+        StuSex,
+        StuPass,
+        cid
+    </sql>
+
+    <sql id="tblstudentBaseWhereSql">
+        <if test="map!=null">
+            <where>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.stuId)">
+                    tblstudent.StuId = #{map.stuId}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.stuName)">
+                    AND tblstudent.StuName = #{map.stuName}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.stuAge)">
+                    AND tblstudent.StuAge = #{map.stuAge}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.stuSex)">
+                    AND tblstudent.StuSex = #{map.stuSex}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.stuPass)">
+                    AND tblstudent.StuPass = #{map.stuPass}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.cid)">
+                    AND tblstudent.cid = #{map.cid}
+                </if>
+            </where>
+        </if>
+    </sql>
+
+    <insert id="insertTblstudent" parameterType="com.mll.operation.core2.entity.Tblstudent">
+        INSERT INTO tblstudent(
+        <include refid="tblstudentBaseColumnSql"/>
+        )VALUES(
+            #{stuId},
+            #{stuName},
+            #{stuAge},
+            #{stuSex},
+            #{stuPass},
+            #{cid}
+        )
+    </insert>
+
+    
+    <delete id="deleteTblstudentByStuId" parameterType="String">
+        DELETE FROM tblstudent WHERE StuId = #{stuId}
+    </delete>
+
+    <update id="updateTblstudent" parameterType="com.mll.operation.core2.entity.Tblstudent">
+        UPDATE tblstudent
+        <set>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(stuName)">
+                StuName = #{stuName} ,
+            </if>
+            <if test="stuAge!=null">
+                StuAge = #{stuAge} ,
+            </if>
+            <if test="stuSex!=null">
+                StuSex = #{stuSex} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(stuPass)">
+                StuPass = #{stuPass} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(cid)">
+                cid = #{cid} ,
+            </if>
+        </set>
+        WHERE StuId = #{stuId}
+    </update>
+
+    <select id="searchTblstudentByParams" parameterType="map" resultMap="tblstudentMap">
+        <!--SELECT-->
+        <!--<include refid="tblstudentBaseColumnSql"/>-->
+        <!--FROM tblstudent-->
+        <!--<include refid="tblstudentBaseWhereSql"/>-->
+        SELECT StuId,StuName,StuAge,StuSex,StuPass,cname  FROM tblstudent JOIN tblclass WHERE tblstudent.cid=tblclass.cid
+        <include refid="tblstudentBaseWhereSql"/>
+    </select>
+
+    <resultMap type="com.mll.operation.core2.entity.Tblstudent" id="tblstudentMap">
+        <id column="StuId" property="stuId"/>
+        <result column="StuName" property="stuName"/>
+        <result column="StuAge" property="stuAge"/>
+        <result column="StuSex" property="stuSex"/>
+        <result column="StuPass" property="stuPass"/>
+        <result column="cid" property="cid"/>
+    </resultMap>
+
+</mapper>
